@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Club - FI-ADEKASH Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .card-header h2 {
+            color: #667eea;
+            font-size: 22px;
+        }
+        .card-header p {
+            color: #718096;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 5px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 13px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .required:after {
+            content: " *";
+            color: #e53e3e;
+        }
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-cancel {
+            background: #a0aec0;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-cancel:hover {
+            background: #718096;
+        }
+        
+        /* Champ numéro généré */
+        .generated-field {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #2d3748;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .info-note {
+            background: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #075985;
+        }
+        .info-note i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">Nouveau Club</div>
+                <div class="topbar-user">
+                    <div class="avatar">AD</div>
+                    <span>Administrateur</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="form-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-plus-circle"></i> Ajouter un nouveau club</h2>
+                            <p>Remplissez tous les champs pour créer un nouveau club. Le numéro de club sera généré automatiquement.</p>
+                        </div>
+                        
+                        <div class="info-note">
+                            <i class="fas fa-info-circle"></i> 
+                            Le numéro de club est généré automatiquement selon le format : <strong>AD-MMAA-NNNN</strong><br>
+                            <small>Exemple: AD-0426-0084 (MM=mois, AA=année, NNNN=numéro séquentiel)</small>
+                        </div>
+                        
+                        <form id="clubForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="required">Nom du Club</label>
+                                    <input type="text" id="nom_club" placeholder="Nom complet du club" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Secteur</label>
+                                    <select id="List_sect" required>
+                                        <option value="">Sélectionner un secteur</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Représentant</label>
+                                    <input type="text" id="representant" placeholder="Nom et prénom" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Grade</label>
+                                    <select id="grade">
+                                        <option value="">Sélectionner un grade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Contact</label>
+                                    <input type="tel" id="contact" placeholder="Téléphone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>WhatsApp</label>
+                                    <input type="tel" id="whatsapp" placeholder="WhatsApp (optionnel)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Email</label>
+                                    <input type="email" id="email" placeholder="email@club.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>N° Déclaration</label>
+                                    <input type="text" id="Num_declaration" placeholder="Numéro de déclaration">
+                                </div>
+                                <div class="form-group">
+                                    <label>Saison</label>
+                                    <select id="saison">
+                                        <option value="">Sélectionner une saison</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Numéro de club (auto-généré)</label>
+                                    <div class="generated-field" id="generatedIdentif">
+                                        <i class="fas fa-spinner fa-spin"></i> Génération en cours...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" onclick="window.location.href='clubs.html'">Annuler</button>
+                                <button type="submit" class="btn-submit">Enregistrer le club</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script>
+        let generatedIdentif = '';
+        
+        // Formater un nombre sur 4 chiffres (ex: 84 -> 0084)
+        function formatNumber(num, digits = 4) {
+            return String(num).padStart(digits, '0');
+        }
+        
+        // Obtenir la date actuelle au format MMMA (ex: avril 2026 -> 0426)
+        function getCurrentMonthYear() {
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = String(now.getFullYear()).slice(-2);
+            return month + year;
+        }
+        
+        // Générer le numéro de club
+        async function generateClubNumber() {
+            try {
+                // Récupérer le dernier identifiant de la table club
+                const response = await fetch('/api/admin/clubs/last-identif');
+                const data = await response.json();
+                
+                let lastNumber = 0;
+                
+                if (data.success && data.last_identif) {
+                    // Extraire les 4 derniers chiffres du dernier identifiant
+                    const match = data.last_identif.match(/(\d{4})$/);
+                    if (match) {
+                        lastNumber = parseInt(match[1]);
+                    }
+                }
+                
+                // Incrémenter de 1
+                const newNumber = lastNumber + 1;
+                const formattedNumber = formatNumber(newNumber);
+                const monthYear = getCurrentMonthYear();
+                
+                generatedIdentif = `AD-${monthYear}-${formattedNumber}`;
+                document.getElementById('generatedIdentif').innerHTML = `
+                    <strong style="color: #667eea;">${generatedIdentif}</strong>
+                    <span style="font-size: 11px; color: #718096; margin-left: 10px;">
+                        <i class="fas fa-check-circle"></i> Auto-généré
+                    </span>
+                `;
+                
+                return generatedIdentif;
+            } catch (error) {
+                console.error('Erreur génération numéro:', error);
+                // Fallback en cas d'erreur
+                const monthYear = getCurrentMonthYear();
+                generatedIdentif = `AD-${monthYear}-0001`;
+                document.getElementById('generatedIdentif').innerHTML = `
+                    <strong style="color: #667eea;">${generatedIdentif}</strong>
+                    <span style="font-size: 11px; color: #e53e3e; margin-left: 10px;">
+                        <i class="fas fa-exclamation-triangle"></i> Génération par défaut
+                    </span>
+                `;
+                return generatedIdentif;
+            }
+        }
+        
+        // Charger les secteurs
+        async function loadSecteurs() {
+            try {
+                const response = await fetch('/api/admin/secteurs');
+                const data = await response.json();
+                if (data.success) {
+                    const select = document.getElementById('List_sect');
+                    select.innerHTML = '<option value="">Sélectionner un secteur</option>';
+                    data.secteurs.forEach(s => {
+                        select.innerHTML += `<option value="${s.id_secteur}">${s.nom_secteur}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur chargement secteurs:', error);
+            }
+        }
+        
+        // Charger les grades
+        async function loadGrades() {
+            try {
+                const response = await fetch('/api/admin/grades');
+                const data = await response.json();
+                if (data.success) {
+                    const select = document.getElementById('grade');
+                    select.innerHTML = '<option value="">Sélectionner un grade</option>';
+                    data.grades.forEach(g => {
+                        select.innerHTML += `<option value="${g.designation}">${g.designation}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur chargement grades:', error);
+            }
+        }
+        
+        // Charger les saisons
+        async function loadSaisons() {
+            try {
+                const response = await fetch('/api/admin/saisons');
+                const data = await response.json();
+                if (data.success) {
+                    const select = document.getElementById('saison');
+                    select.innerHTML = '<option value="">Sélectionner une saison</option>';
+                    data.saisons.forEach(s => {
+                        select.innerHTML += `<option value="${s.libelle_saison}">${s.libelle_saison}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur chargement saisons:', error);
+            }
+        }
+        
+        function showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#48bb78' : '#f56565'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                z-index: 10000;
+                font-size: 14px;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Soumission du formulaire
+        document.getElementById('clubForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Vérifier que le numéro a bien été généré
+            if (!generatedIdentif) {
+                await generateClubNumber();
+            }
+            
+            const clubData = {
+                identif_club: generatedIdentif,
+                nom_club: document.getElementById('nom_club').value,
+                List_sect: document.getElementById('List_sect').value,
+                representant: document.getElementById('representant').value,
+                grade: document.getElementById('grade').value,
+                contact: document.getElementById('contact').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                email: document.getElementById('email').value,
+                Num_declaration: document.getElementById('Num_declaration').value,
+                saison: document.getElementById('saison').value,
+                statut: 'actif'  // Toujours actif à l'inscription
+            };
+            
+            // Validation
+            if (!clubData.nom_club) {
+                showNotification('Veuillez saisir le nom du club', 'error');
+                return;
+            }
+            if (!clubData.List_sect) {
+                showNotification('Veuillez sélectionner un secteur', 'error');
+                return;
+            }
+            if (!clubData.representant) {
+                showNotification('Veuillez saisir le nom du représentant', 'error');
+                return;
+            }
+            if (!clubData.contact) {
+                showNotification('Veuillez saisir le contact', 'error');
+                return;
+            }
+            if (!clubData.email) {
+                showNotification('Veuillez saisir l\'email', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/clubs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(clubData)
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showNotification(`Club créé avec succès ! Numéro: ${generatedIdentif}`);
+                    setTimeout(() => {
+                        window.location.href = 'clubs.html';
+                    }, 1500);
+                } else {
+                    showNotification('Erreur: ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur lors de l\'enregistrement', 'error');
+            }
+        });
+        
+        // Initialisation
+        loadSecteurs();
+        loadGrades();
+        loadSaisons();
+        generateClubNumber();
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Clubs - FI-ADEKASH Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/clubs.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar-container"></div>
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">Gestion des Clubs</div>
+                <div class="topbar-user">
+                    <div class="avatar" id="userAvatar">AD</div>
+                    <span id="userName">Administrateur</span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Rechercher...">
+                        <button class="btn-primary" onclick="searchClubs()">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                    <button class="btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Nouveau Club
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table id="clubsTable">
+                        <thead>
+                            <tr>
+                                <th>N° Club</th>
+                                <th>Nom</th>
+                                <th>Représentant</th>
+                                <th>Contact</th>
+                                <th>Secteur</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clubsTableBody">
+                            <tr><td colspan="7" class="loader">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Ajout/Modification Club -->
+    <div id="clubModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un Club</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="clubForm">
+                    <input type="hidden" id="clubId">
+                    <input type="hidden" id="identifClub">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="required">Nom du Club</label>
+                            <input type="text" id="nomClub" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Secteur</label>
+                            <select id="secteur" required>
+                                <option value="">Sélectionner</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Représentant</label>
+                            <input type="text" id="representant" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Grade</label>
+                            <select id="grade">
+                                <option value="">Sélectionner</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Contact</label>
+                            <input type="tel" id="contact" required>
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp</label>
+                            <input type="tel" id="whatsapp">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email">
+                        </div>
+                        <div class="form-group">
+                            <label>N° Déclaration</label>
+                            <input type="text" id="numDeclaration">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button class="btn-save" onclick="saveClub()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmation suppression -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Confirmer la suppression</h2>
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage"></p>
+                <p style="font-size:12px;color:#e53e3e; margin-top:10px;">
+                    <i class="fas fa-warning"></i> Action irréversible !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+                <button class="btn-save" id="confirmDeleteBtn" style="background:#e53e3e">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/clubs.js"></script>
+    <script>
+        // Chargement de la sidebar
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-container').innerHTML = html;
+                const currentPage = window.location.pathname.split('/').pop();
+                document.querySelectorAll('.nav-main, .submenu-link').forEach(link => {
+                    if (link.getAttribute('href') === currentPage) link.classList.add('active');
+                });
+                if (currentPage === 'clubs.html' || currentPage === 'clubs-saison.html' || currentPage === 'clubs-new.html') {
+                    const clubsMenu = document.getElementById('clubsMenu');
+                    if (clubsMenu) clubsMenu.classList.add('open');
+                }
+            })
+            .catch(error => console.error('Erreur chargement sidebar:', error));
+    </script>
+</body>
+</html>
