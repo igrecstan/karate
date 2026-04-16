@@ -4,15 +4,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ClubsPage from './pages/ClubsPage';
 import DocumentsPage from './pages/DocumentsPage';
 import EventsPage from './pages/EventsPage';
+import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import MessagesPage from './pages/MessagesPage';
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/admin/login" element={<LoginPage />} />
       <Route
-        path="/"
+        path="/admin"
         element={
           <ProtectedRoute>
             <Layout />

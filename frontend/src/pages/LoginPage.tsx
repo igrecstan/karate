@@ -14,7 +14,7 @@ export default function LoginPage() {
     try {
       const data = await login(username, password);
       localStorage.setItem('token', data.token);
-      navigate('/');
+      navigate('/admin');
     } catch {
       setError('Connexion échouée');
     }
