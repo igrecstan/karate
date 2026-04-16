@@ -5,21 +5,21 @@ export default function Layout() {
 
   const logout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/admin/login');
   };
 
   return (
     <div>
       <header className="topbar">
-        <Link to="/" className="brand">FI-ADEKASH</Link>
+        <Link to="/admin" className="brand">FI-ADEKASH</Link>
         <button onClick={logout}>Déconnexion</button>
       </header>
       <div className="shell">
         <aside className="sidebar">
-          <NavLink to="/">Clubs</NavLink>
-          <NavLink to="/messages">Messages</NavLink>
-          <NavLink to="/events">Évènements</NavLink>
-          <NavLink to="/documents">Documents</NavLink>
+          <NavLink to="/admin">Clubs</NavLink>
+          <NavLink to="/admin/messages">Messages</NavLink>
+          <NavLink to="/admin/events">Évènements</NavLink>
+          <NavLink to="/admin/documents">Documents</NavLink>
         </aside>
         <main className="content"><Outlet /></main>
       </div>
