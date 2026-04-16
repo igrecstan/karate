@@ -6,7 +6,7 @@ Le projet a été migré vers une stack moderne sans exécution Python.
 - **API**: Express + TypeScript (`/api`)
 - **Base de données (phase 2)**: PostgreSQL via `DATABASE_URL` (fallback mémoire si absent)
 
-## Démarrage rapide
+## Démarrage rapide (local)
 
 ```bash
 cp .env.example .env
@@ -27,6 +27,27 @@ npm run dev
 ```
 
 Au premier démarrage, l'API crée les tables et injecte des données initiales.
+
+## Tester la page avec GitHub Pages
+
+> GitHub Pages héberge seulement le frontend statique. L'API doit être déployée séparément (Railway/Render/Fly.io/etc.).
+
+1. Pousse le code sur la branche `main`.
+2. Dans GitHub: **Settings → Pages → Source: GitHub Actions**.
+3. Dans GitHub: **Settings → Secrets and variables → Actions → Variables**, crée:
+   - `VITE_API_URL` = URL publique de ton API (ex: `https://karate-api.onrender.com`)
+4. Le workflow `.github/workflows/deploy-pages.yml` build et déploie automatiquement `/frontend` sur Pages.
+5. URL attendue: `https://<ton-user>.github.io/<ton-repo>/`
+
+### Tester en local comme GitHub Pages
+
+```bash
+# simule le base path Pages
+VITE_BASE_PATH=/karate/ npm run dev -w frontend
+```
+
+Puis ouvre:
+`http://localhost:5173/#/`
 
 ## Comptes de test
 
