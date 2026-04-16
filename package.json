@@ -1,0 +1,14 @@
+{
+  "name": "karate-modern-stack",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend",
+    "api"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w api & npm run dev -w frontend",
+    "build": "npm run build -w api && npm run build -w frontend",
+    "typecheck": "npm run typecheck -w api && npm run typecheck -w frontend"
+  }
+}
