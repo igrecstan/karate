@@ -39,6 +39,12 @@ Au premier démarrage, l'API crée les tables et injecte des données initiales.
 4. Le workflow `.github/workflows/deploy-pages.yml` build et déploie automatiquement `/frontend` sur Pages.
 5. URL attendue: `https://<ton-user>.github.io/<ton-repo>/`
 
+### Si le workflow GitHub Pages échoue (cache/deprecation Node 20)
+
+- Le workflow est configuré avec `actions/checkout@v5` et `actions/setup-node@v5` (compatibles Node 24).
+- Le cache npm a été retiré pour éviter les erreurs de chemins de lockfile non trouvés.
+- Vérifie simplement que `VITE_API_URL` existe bien dans **Settings → Secrets and variables → Actions → Variables**.
+
 ### Tester en local comme GitHub Pages
 
 ```bash
